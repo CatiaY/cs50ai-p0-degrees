@@ -91,9 +91,45 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
+    
+    # People ids are states
+    # Movies are actions that take us from one actor to another
+    start = Node(state=source, parent=None, action=None)
+    frontier = QueueFrontier()
+    frontier.add(start)    
+    explored = set()
+    
+    while True: 
 
-    # TODO
-    raise NotImplementedError
+        # If there is no possible path between two actors, return None
+        if frontier.empty():
+            return None
+        
+        node = frontier.remove()
+
+        # If node is the goal, return a list of tuples.
+        # Each tuple is the next (movie_id, person_id) pair in the path from the source to the target.
+        # For example, the list [(1, 2), (3, 4)] means that the source starred in movie 1 with person 2, person 2 starred in movie 3 with person 4, and person 4 is the target.
+        if node.state == target:
+            movies = []
+            people = []
+            while node.parent is not None:
+                movies.append(node.action)
+                people.append(node.state)
+                node = node.parent
+            movies.reverse()
+            people.reverse()
+            solution = list(zip(movies, people))
+            return solution
+
+
+        explored.add(node.state)
+
+        # Add neighbors to frontier
+        for movie_id, person_id in neighbors_for_person(node.state):
+            if not frontier.contains_state(person_id) and person_id not in explored:
+                child = Node(state=person_id, parent=node, action=movie_id)
+                frontier.add(child)
 
 
 def person_id_for_name(name):
