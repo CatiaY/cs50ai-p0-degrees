@@ -106,27 +106,15 @@ def shortest_path(source, target):
             return None
         
         node = frontier.remove()
-
-        # If node is the goal, return a list of tuples.
-        # Each tuple is the next (movie_id, person_id) pair in the path from the source to the target.
-        # For example, the list [(1, 2), (3, 4)] means that the source starred in movie 1 with person 2, person 2 starred in movie 3 with person 4, and person 4 is the target.
-        if node.state == target:
-            movies = []
-            people = []
-            while node.parent is not None:
-                movies.append(node.action)
-                people.append(node.state)
-                node = node.parent
-            movies.reverse()
-            people.reverse()
-            solution = list(zip(movies, people))
-            return solution
-
-
         explored.add(node.state)
 
         # Add neighbors to frontier
         for movie_id, person_id in neighbors_for_person(node.state):
+            if person_id == target:
+                target_node = Node(state=person_id, parent=node, action=movie_id)
+                solution = get_solution(target_node)            
+                return solution
+            
             if not frontier.contains_state(person_id) and person_id not in explored:
                 child = Node(state=person_id, parent=node, action=movie_id)
                 frontier.add(child)
@@ -169,6 +157,24 @@ def neighbors_for_person(person_id):
         for person_id in movies[movie_id]["stars"]:
             neighbors.add((movie_id, person_id))
     return neighbors
+
+
+def get_solution(node):
+    """
+    Return a list of tuples.
+    Each tuple is the next (movie_id, person_id) pair in the path from the source to the target.
+    For example, the list [(1, 2), (3, 4)] means that the source starred in movie 1 with person 2, person 2 starred in movie 3 with person 4, and person 4 is the target.
+    """
+    movies = []
+    people = []
+    while node.parent is not None:
+        movies.append(node.action)
+        people.append(node.state)
+        node = node.parent
+    movies.reverse()
+    people.reverse()
+    solution = list(zip(movies, people))
+    return solution
 
 
 if __name__ == "__main__":
