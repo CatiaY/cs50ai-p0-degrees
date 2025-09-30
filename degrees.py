@@ -92,6 +92,9 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
     
+    if source == target:    
+        return None    
+
     # People ids are states
     # Movies are actions that take us from one actor to another
     start = Node(state=source, parent=None, action=None)
