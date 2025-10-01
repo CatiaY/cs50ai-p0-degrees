@@ -23,7 +23,7 @@ Name: Jennifer Lawrence
 **Notes**
 - The description above is adapted from the official project specification.
 - Implemented using the course’s starter code, with modifications made to fulfill the project requirements.
-- Completed as part of the CS50 AI coursework.
+- Completed as part of the CS50’s Introduction to AI with Python (2024 edition) coursework.
 
 
 ### How to Run
